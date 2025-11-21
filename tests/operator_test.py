@@ -9,10 +9,10 @@ def test_operator():
         subprocess.run("kubectl apply -f crds/variable.yaml", shell=True, check=True)
         time.sleep(1)  # give it some time to react and to sleep and to retry
         
-        subprocess.run("kubectl apply -f examples/variable.yaml", shell=True, check=True)
+        subprocess.run("kubectl apply -f tests/variable.yaml", shell=True, check=True)
         time.sleep(5)  # give it some time to react
         
-        subprocess.run("kubectl delete -f examples/variable.yaml", shell=True, check=True)
+        subprocess.run("kubectl delete -f tests/variable.yaml", shell=True, check=True)
         time.sleep(1)  # give it some time to react and to sleep and to retry
 
         subprocess.run("kubectl delete -f crds/variable.yaml", shell=True, check=True)

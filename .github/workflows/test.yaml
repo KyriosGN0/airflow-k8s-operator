@@ -25,7 +25,23 @@ jobs:
         run: helm repo add apache-airflow https://airflow.apache.org && helm repo update
       
       - name: Install Airflow
-        run: helm install airflow apache-airflow/airflow
-      
+        run: |
+          helm install airflow apache-airflow/airflow \
+            --set executor=KubernetesExecutor \
+            --set workers.replicas=0 \
+            --set flower.enabled=false \
+            --set redis.enabled=false \
+            --set postgresql.enabled=true \
+            --set webserver.replicas=1 \
+            --set scheduler.replicas=1 \
+            --set triggerer.enabled=false \
+            --set statsd.enabled=false \
+            --set pgbouncer.enabled=false \
+            --timeout 10m \
+            --wait
+
+    #   - name: install test dependencies
+    #     run: uv sync --group test
+
     #   - name: Run operator test
     #     run: uv run pytest tests/operator_test.py
