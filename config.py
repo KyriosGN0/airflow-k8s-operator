@@ -2,6 +2,9 @@ import os
 import airflow_client.client as client
 import google.auth
 import google.auth.transport.requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 AIRFLOW_HOST = os.getenv("AIRFLOW_HOST")
 if not AIRFLOW_HOST:
@@ -13,7 +16,7 @@ if not AIRFLOW_HOST.endswith('/api/v1'):
 		AIRFLOW_HOST = AIRFLOW_HOST + 'api/v1'
 	else:
 		AIRFLOW_HOST = AIRFLOW_HOST + '/api/v1'
-	print(f"Info: Appending '/api/v1' to AIRFLOW_HOST. Using: {AIRFLOW_HOST}")
+	logger.info(f"Appending '/api/v1' to AIRFLOW_HOST. Using: {AIRFLOW_HOST}")
 
 AIRFLOW_USERNAME = os.getenv("AIRFLOW_USERNAME")
 AIRFLOW_PASSWORD = os.getenv("AIRFLOW_PASSWORD")
