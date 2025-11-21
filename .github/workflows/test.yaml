@@ -30,7 +30,7 @@ jobs:
             --set postgresql.image.repository=bitnamilegacy/postgresql \
             --set postgresql.image.tag=16.1.0-debian-11-r15 \
             --set executor=KubernetesExecutor \
-            --set workers.replicas=1 \
+            --set workers.replicas=0 \
             --set redis.enabled=false \
             --set triggerer.enabled=false \
             --set statsd.enabled=false \
@@ -43,9 +43,14 @@ jobs:
 
       - name: Set Airflow environment variable
         run: |
-          echo "AIRFLOW_HOST=http://airflow-webserver.default.svc.cluster.local:8080" >> $GITHUB_ENV
+          echo "AIRFLOW_HOST=http://localhost:8080" >> $GITHUB_ENV
           echo "AIRFLOW_USERNAME=admin" >> $GITHUB_ENV
           echo "AIRFLOW_PASSWORD=admin" >> $GITHUB_ENV
+
+      - name: Port forward Airflow webserver
+        run: |
+          kubectl port-forward svc/airflow-webserver 8080:8080 &
+          sleep 5
 
       - name: install test dependencies
         run: uv sync --group test
