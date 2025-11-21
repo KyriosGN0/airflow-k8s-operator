@@ -34,6 +34,10 @@ def delete_variable(meta, spec, namespace, logger, body, **kwargs):
             )
         return {'message': f'Variable {var_name} deleted successfully.'}
     except Exception as e:
+        # Ignore 404 errors - variable already doesn't exist
+        if '404' in str(e) or 'Not Found' in str(e):
+            logger.info(f"Variable {var_name} already deleted or doesn't exist")
+            return {'message': f'Variable {var_name} already deleted or doesn\'t exist.'}
         logger.error(f"Failed to delete Airflow Variable {var_name}: {e}")
         return {'error': f'Failed to delete variable {var_name}: {e}'}
     
