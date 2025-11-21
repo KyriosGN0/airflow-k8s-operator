@@ -44,5 +44,5 @@ jobs:
       - name: install test dependencies
         run: uv sync --group test
 
-    #   - name: Run operator test
-    #     run: uv run pytest tests/operator_test.py
+      - name: Run operator test
+        run: uv run pytest tests/operator_test.py
