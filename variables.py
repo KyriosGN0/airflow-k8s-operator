@@ -1,9 +1,9 @@
 import kopf
-import airflow_client.client as client
+from airflow_client.client.api.variable_api import VariableApi
 from airflow_client.client.model.variable import Variable
 from config import api_client
 
-variables_api = client.apis.VariableApi(api_client=api_client)
+variables_api = VariableApi(api_client=api_client)
 @kopf.on.create('airflow.drfaust92', 'v1beta1', 'variables')
 def create_variable(meta, spec, namespace, logger, body, **kwargs):
     var_name = spec.get('name')
@@ -36,3 +36,25 @@ def delete_variable(meta, spec, namespace, logger, body, **kwargs):
     except Exception as e:
         logger.error(f"Failed to delete Airflow Variable {var_name}: {e}")
         return {'error': f'Failed to delete variable {var_name}: {e}'}
+    
+@kopf.on.update('airflow.drfaust92', 'v1beta1', 'variables')
+def update_variable(meta, spec, namespace, logger, body, **kwargs):
+    var_name = spec.get('name')
+    var_value = spec.get('value')
+    var_description = spec.get('description', '')
+
+    logger.info(f"Updating Airflow Variable: {var_name} with value: [MASKED] and description: {var_description}")
+    try:
+        variable = Variable(
+            key=var_name,
+            value=var_value,
+            description=var_description
+        )
+        variables_api.patch_variable(
+            variable_key=var_name,
+            variable=variable
+            )
+        return {'message': f'Variable {var_name} updated successfully.'}
+    except Exception as e:
+        logger.error(f"Failed to update Airflow Variable {var_name}: {e}")
+        return {'error': f'Failed to update variable {var_name}: {e}'} 
