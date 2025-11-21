@@ -22,7 +22,7 @@ AIRFLOW_USERNAME = os.getenv("AIRFLOW_USERNAME")
 AIRFLOW_PASSWORD = os.getenv("AIRFLOW_PASSWORD")
 
 # Check if we should use Google Cloud authentication (for Cloud Composer)
-USE_GOOGLE_AUTH = os.getenv("USE_GOOGLE_AUTH", "true").lower() == "true"
+USE_GOOGLE_AUTH = os.getenv("USE_GOOGLE_AUTH").lower() == "true"
 
 if USE_GOOGLE_AUTH:
 	# Authenticate using Application Default Credentials for Google Cloud Composer
