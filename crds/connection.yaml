@@ -6,7 +6,7 @@ spec:
   group: airflow.drfaust92
   scope: Namespaced
   names:
-    kind: connection
+    kind: Connection
     plural: connections
     singular: connection
     shortNames:
