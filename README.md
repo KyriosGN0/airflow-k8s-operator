@@ -6,7 +6,17 @@ This Kubernetes operator provides a way to manage Airflow resources within a Kub
 
 ## Features
 
-- **Airflow Variables**: Currently supports only Airflow variables management.
+- **Airflow Variables**: Management of Airflow variables
+- **Airflow Connections**: Management of Airflow connections
+
+## Roadmap (TBD)
+
+- Airflow pools
+- Support for AWS managed Airflow
+
+## Compatibility
+
+Currently supports **Airflow v2** (tested on v2.10.0). Airflow v3 is not yet supported.
 
 ## Authentication
 
