@@ -3,7 +3,7 @@ import subprocess
 from kopf.testing import KopfRunner
 
 def test_operator():
-    with KopfRunner(['run', '-A', '--verbose', 'main.py']) as runner:
+    with KopfRunner(['run', '-A', '--verbose', 'main.py']) as runner: # noqa: F841
 
         # create CRDs
         subprocess.run("kubectl apply -f crds/variable.yaml", shell=True, check=True)
