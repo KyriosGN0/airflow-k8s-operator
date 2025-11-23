@@ -2,20 +2,30 @@ import kopf
 from airflow_client.client.api.connection_api import ConnectionApi
 from airflow_client.client.model.connection import Connection
 from config import api_client
+from k8s_secret import resolve_value
 
 connections_api = ConnectionApi(api_client=api_client)
 @kopf.on.create('airflow.drfaust92', 'v1beta1', 'connections')
 def create_connection(meta, spec, namespace, logger, body, **kwargs):
     connection_id = meta.get('name')
     var_conn_type = spec.get('connType')
-    var_description = spec.get('description', '')
 
     logger.info(f"Creating Airflow Connection: {connection_id} with connType: {var_conn_type}")
     try:
+        # Resolve sensitive fields from direct values or secret references
+        login = resolve_value(spec.get('login'), namespace, logger=logger) if spec.get('login') else None
+        password = resolve_value(spec.get('password'), namespace, logger=logger) if spec.get('password') else None
+        
         connection = Connection(
             connection_id=connection_id,
             conn_type=var_conn_type,
-            description=var_description
+            description=spec.get('description'),
+            host=spec.get('host'),
+            login=login,
+            password=password,
+            port=spec.get('port'),
+            schema=spec.get('schema'),
+            extra=spec.get('extra')
         )
         connections_api.post_connection(connection)
         return {'message': f'Connection {connection_id} created successfully.'}
@@ -45,14 +55,23 @@ def delete_connection(meta, spec, namespace, logger, body, **kwargs):
 def update_connection(meta, spec, namespace, logger, body, **kwargs):
     connection_id = meta.get('name')
     var_conn_type = spec.get('connType')
-    var_description = spec.get('description', '')
 
     logger.info(f"Updating Airflow Connection: {connection_id} with connType: {var_conn_type}")
     try:
+        # Resolve sensitive fields from direct values or secret references
+        login = resolve_value(spec.get('login'), namespace, logger=logger) if spec.get('login') else None
+        password = resolve_value(spec.get('password'), namespace, logger=logger) if spec.get('password') else None
+        
         connection = Connection(
             connection_id=connection_id,
             conn_type=var_conn_type,
-            description=var_description
+            description=spec.get('description'),
+            host=spec.get('host'),
+            login=login,
+            password=password,
+            port=spec.get('port'),
+            schema=spec.get('schema'),
+            extra=spec.get('extra')
         )
         connections_api.patch_connection(
             connection_id=connection_id,

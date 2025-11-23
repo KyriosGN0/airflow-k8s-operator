@@ -16,14 +16,14 @@ spec:
     - name: v1beta1
       served: true
       storage: true
+      subresources:
+        status: {}
       schema:
         openAPIV3Schema:
           type: object
           properties:
             spec:
               type: object
-              required:
-                - connType
               properties:
                 connType:
                   type: string
@@ -34,14 +34,36 @@ spec:
                 host:
                   type: string
                   description: The connection host.
+                # login/password may be provided as a direct value or a secretRef object
                 login:
-                  type: string
-                  description: The connection login.
-                password: # this field is sensitive and api wont return it in GET requests
-                  type: string
-                  description: The connection password.
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    secretRef:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        key:
+                          type: string
+                  description: The connection login (value or secretRef).
+                password:
+                  type: object
+                  properties:
+                    value:
+                      type: string
+                    secretRef:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        key:
+                          type: string
+                  description: The connection password (value or secretRef).
                 port:
                   type: integer
+                  format: int32
                   description: The connection port.
                 schema:
                   type: string

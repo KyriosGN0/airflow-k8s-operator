@@ -8,6 +8,7 @@ dependencies = [
     "apache-airflow-client==2.10.0",
     "kopf>=1.38.0",
     "google-auth[requests]>=2.43.0",
+    "kubernetes>=34.1.0",
 ]
 
 [dependency-groups]

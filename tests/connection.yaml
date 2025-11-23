@@ -7,8 +7,10 @@ spec:
   connType: "generic"
   description: "Example Airflow Connection that stores an S3 connection."
   host: "example-bucket"
-  login: "user"
-  password: "password"
+  login:
+    value: "user"
+  password:
+    value: "password"
   port: 443
   schema: "https"
   extra: "{}"
