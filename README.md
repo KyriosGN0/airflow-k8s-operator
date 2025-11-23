@@ -70,6 +70,97 @@ AIRFLOW_HOST=http://airflow.example.com/
 
 Both will result in: `http://airflow.example.com/api/v1`
 
+## Testing Locally
+
+The recommended approach for local testing is to set up a local Kubernetes cluster using [kind](https://kind.sigs.k8s.io/) and deploy Airflow within it.
+
+### Prerequisites
+
+- Docker
+- kind
+- kubectl
+- Python 3.12+
+
+### Setting Up a Local Testing Environment
+
+1. Create a local kind cluster:
+
+```bash
+kind create cluster
+```
+
+1. Deploy Airflow to the cluster:
+
+```bash
+helm repo add apache-airflow https://airflow.apache.org && helm repo update
+helm upgrade --install airflow apache-airflow/airflow --version 1.16.0 \
+            --set postgresql.image.repository=bitnamilegacy/postgresql \
+            --set postgresql.image.tag=16.1.0-debian-11-r15 \
+            --set executor=KubernetesExecutor \
+            --set workers.replicas=0 \
+            --set redis.enabled=false \
+            --set triggerer.enabled=false \
+            --set statsd.enabled=false \
+            --set createUserJob.useHelmHooks=false \
+            --set createUserJob.applyCustomEnv=false \
+            --set migrateDatabaseJob.useHelmHooks=false \
+            --set migrateDatabaseJob.applyCustomEnv=false \
+            --set webserver.resources.requests.memory=1Gi \
+            --set webserver.resources.limits.memory=1Gi \
+            --set config.api.auth_backend=airflow.api.auth.backend.basic_auth \
+            --timeout 3m \
+            --wait
+kubectl port-forward svc/airflow-webserver 8080:8080
+```
+
+This deploys the necessary resources to your local kind cluster for testing.
+
+1. Deploy the Custom Resource Definitions (CRDs):
+
+```bash
+kubectl apply -f crds/
+```
+
+This applies the Airflow Variable and Connection CRDs to your cluster, enabling you to manage Airflow resources using Kubernetes custom resources.
+
+1. Deploy a Custom Resource:
+
+After deploying the CRDs, you can create Airflow Variables and Connections as Kubernetes custom resources. Examples are available in the `tests/` directory.
+
+**Deploy an Airflow Variable:**
+
+```bash
+kubectl apply -f tests/variable.yaml
+```
+
+**Deploy an Airflow Connection:**
+
+```bash
+kubectl apply -f tests/connection.yaml
+```
+
+These custom resources will be automatically synchronized with your Airflow instance.
+
+1. Run the test suite:
+
+```bash
+python tests/operator_test.py
+```
+
+### Cleaning Up
+
+To remove the test resources:
+
+```bash
+kubectl delete -f tests/
+```
+
+To delete the kind cluster:
+
+```bash
+kind delete cluster
+```
+
 ## Installation
 
 [Installation instructions to be added]
