@@ -1,5 +1,5 @@
-import variables  # noqa: F401
-import connections  # noqa: F401
+import resources.variables  # noqa: F401
+import resources.connections  # noqa: F401
 import datetime
 import kopf
 

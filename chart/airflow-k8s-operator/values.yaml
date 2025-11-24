@@ -20,9 +20,6 @@ fullnameOverride: ""
 
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # -- (bool) whether to create a service account
-  # Specifies whether a service account should be created.
-  create: true
   # -- (bool) whether to automount the service account token
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
