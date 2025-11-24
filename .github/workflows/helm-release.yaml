@@ -37,5 +37,5 @@ jobs:
       - name: Push chart to GHCR
         run: |
           helm package chart/airflow-k8s-operator
-          helm push airflow-k8s-operator-*.tgz oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/charts
+          helm push airflow-k8s-operator-*.tgz oci://ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/charts
 
