@@ -1,7 +1,6 @@
 import os
 import airflow_client.client as client
 import logging
-from config.gcp import gcp_api_client
 from config.base import AIRFLOW_HOST
 
 logger = logging.getLogger(__name__)
@@ -13,6 +12,8 @@ AIRFLOW_PASSWORD = os.getenv("AIRFLOW_PASSWORD")
 USE_GOOGLE_AUTH = os.getenv("USE_GOOGLE_AUTH")
 
 if USE_GOOGLE_AUTH is not None and USE_GOOGLE_AUTH.lower() in ["true"]:
+    from config.gcp import gcp_api_client
+
     api_client = gcp_api_client
 elif AIRFLOW_USERNAME and AIRFLOW_PASSWORD:
     configuration = client.Configuration(
