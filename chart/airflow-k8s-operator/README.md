@@ -1,6 +1,6 @@
 # airflow-k8s-operator
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.4.0](https://img.shields.io/badge/AppVersion-0.4.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes Airflow Operator
 
@@ -30,7 +30,6 @@ A Helm chart for Kubernetes Airflow Operator
 | securityContext | map | `{}` | container security context |
 | serviceAccount.annotations | map | `{}` | annotations to add to the service account Annotations to add to the service account. |
 | serviceAccount.automount | bool | `true` | whether to automount the service account token Automatically mount a ServiceAccount's API credentials? |
-| serviceAccount.create | bool | `true` | whether to create a service account Specifies whether a service account should be created. |
 | serviceAccount.name | string | `""` | service account name (optional) The name of the service account to use. If not set and create is true, a name is generated using the fullname template. |
 | tolerations | list | `[]` |  |
 | volumeMounts | list | `[]` |  |
