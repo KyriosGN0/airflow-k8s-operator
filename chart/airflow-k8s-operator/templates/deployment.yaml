@@ -54,16 +54,18 @@ spec:
             - name: LIVENESS_PROBE
               value: {{ tpl .Values.operator.livenessProbeAddress . | quote }}
             {{- end }}
+            {{- if not .Values.operator.isComposer}}
             - name: AIRFLOW_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.operator.basicAuthSecret.SecretName }}
-                  key: {{ .Values.operator.basicAuthSecret.UsernameKey }}
+                  name: {{ .Values.operator.basicAuthSecret.secretName }}
+                  key: {{ .Values.operator.basicAuthSecret.usernameKey }}
             - name: AIRFLOW_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.operator.basicAuthSecret.SecretName }}
-                  key: {{ .Values.operator.basicAuthSecret.PasswordKey }}
+                  name: {{ .Values.operator.basicAuthSecret.secretName }}
+                  key: {{ .Values.operator.basicAuthSecret.passwordKey }}
+            {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

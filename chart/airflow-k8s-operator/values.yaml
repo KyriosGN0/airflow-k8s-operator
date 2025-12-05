@@ -72,7 +72,7 @@ resources:
 # -- (map) liveness probe configuration
 livenessProbe:
   httpGet:
-    path: /
+    path: "/healthz"
     port: http
 
 # Additional volumes on the output Deployment definition.
@@ -136,7 +136,7 @@ port: 8080
 
 operator:
   # -- (string) address for the operator
-  airflowHost: airflow-webserver.default.svc.cluster.local:8080
+  airflowHost: ""
   # -- (bool) set to true if using Composer
   isComposer: false
 
