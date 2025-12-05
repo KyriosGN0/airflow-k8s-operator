@@ -148,7 +148,9 @@ operator:
     create: true
     # -- (string) name of the basic auth secret
     secretName: "airflow-basic-auth"
+    # -- (string) key name for username in the secret
     usernameKey: AIRFLOW_USERNAME
+    # -- (string) key name for password in the secret
     passwordKey: AIRFLOW_PASSWORD
   # -- (string) liveness probe address for the operator
   livenessProbeAddress: "http://0.0.0.0:{{ .Values.port }}/healthz"
