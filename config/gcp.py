@@ -3,15 +3,21 @@ import google.auth
 import google.auth.transport.requests
 import logging
 from config.base import AIRFLOW_HOST
+from config.metrics import AUTH_REFRESH, AUTH_FAILURES
 
 logger = logging.getLogger(__name__)
 
 # Authenticate using Application Default Credentials for Google Cloud Composer
-credentials, project = google.auth.default(
-    scopes=["https://www.googleapis.com/auth/cloud-platform"]
-)
-auth_req = google.auth.transport.requests.Request()
-credentials.refresh(auth_req)
+try:
+    credentials, project = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    auth_req = google.auth.transport.requests.Request()
+    credentials.refresh(auth_req)
+except Exception as e:
+    logger.error(f"Failed to authenticate with Google Cloud: {e}")
+    AUTH_FAILURES.labels(auth_type='google_cloud').inc()
+    raise
 
 configuration = client.Configuration(host=AIRFLOW_HOST)
 
@@ -45,7 +51,12 @@ class GoogleAuthApiClient(client.ApiClient):
     ):
         # Refresh token if needed before each API call
         if not self._credentials.valid:
-            self._credentials.refresh(self._auth_request)
+            try:
+                self._credentials.refresh(self._auth_request)
+            except Exception as e:
+                logger.error(f"Failed to refresh Google Cloud credentials: {e}")
+                AUTH_FAILURES.labels(auth_type='google_cloud').inc()
+                raise
 
         # Set the authorization header
         if header_params is None:
