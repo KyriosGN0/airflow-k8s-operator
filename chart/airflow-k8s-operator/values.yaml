@@ -144,6 +144,8 @@ podMonitor:
   interval: "30s"
   # -- (string) scrape timeout for the PodMonitor
   timeout: "10s"
+  # -- (string) metrics path for the PodMonitor
+  path: ""
 
 operator:
   # -- (string) address for the operator

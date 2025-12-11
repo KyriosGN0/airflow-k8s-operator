@@ -9,7 +9,6 @@ dependencies = [
     "kopf>=1.38.0",
     "google-auth[requests]>=2.43.0",
     "kubernetes>=34.1.0",
-    "opentelemetry-instrumentation-requests==0.59b0",
     "prometheus-client==0.23.1",
 ]
 
