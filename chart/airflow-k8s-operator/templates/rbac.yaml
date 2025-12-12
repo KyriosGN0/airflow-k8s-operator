@@ -11,11 +11,14 @@ rules:
     resources: [namespaces]
     verbs: [list, watch]
   - apiGroups: [""]
+    resources: [events]
+    verbs: [list, watch, get, create, patch]
+  - apiGroups: [""]
     resources: [secrets]
     verbs: [get, list, watch]
   - apiGroups: [airflow.drfaust92]
-    resources: [variables, connections, pools]
-    verbs: [list, watch, get]
+    resources: [variables, variables/status, connections, connections/status, pools, pools/status]
+    verbs: [list, watch, get, patch]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
