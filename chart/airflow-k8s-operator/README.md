@@ -1,6 +1,6 @@
 # airflow-k8s-operator
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.0](https://img.shields.io/badge/AppVersion-0.1.0-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.1.1](https://img.shields.io/badge/AppVersion-0.1.1-informational?style=flat-square)
 
 A Helm chart for Kubernetes Airflow Operator
 
@@ -9,6 +9,8 @@ A Helm chart for Kubernetes Airflow Operator
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| containerPort | int | `9000` | metrics port for the operator container |
+| dnsConfig | map | `{}` | dnsConfig for the pod |
 | env | list | `[]` | environment variables for the container (name/value entries) |
 | envFrom | list | `[]` | envFrom sources (configMapRef or secretRef) |
 | fullnameOverride | string | `""` | full chart name override |
@@ -34,8 +36,9 @@ A Helm chart for Kubernetes Airflow Operator
 | podMonitor.path | string | `""` | metrics path for the PodMonitor |
 | podMonitor.timeout | string | `"10s"` | scrape timeout for the PodMonitor |
 | podSecurityContext | map | `{}` | pod-level security context |
-| port | int | `8080` |  |
+| port | int | `8080` | metrics port for the operator |
 | resources | object | `{}` |  |
+| revisionHistoryLimit | int | `10` | number of old ReplicaSets to retain to allow rollback |
 | securityContext | map | `{}` | container security context |
 | serviceAccount.annotations | map | `{}` | annotations to add to the service account Annotations to add to the service account. |
 | serviceAccount.automount | bool | `true` | whether to automount the service account token Automatically mount a ServiceAccount's API credentials? |
