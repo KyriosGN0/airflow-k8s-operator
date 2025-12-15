@@ -5,9 +5,10 @@ metadata:
   labels:
     {{- include "airflow-k8s-operator.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: 1 # Airflow Operator should have only one active pod as there is no leader election
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   strategy:
-    type: Recreate
+    type: Recreate # Airflow Operator should have only one active pod as there is no leader election
   selector:
     matchLabels:
       {{- include "airflow-k8s-operator.selectorLabels" . | nindent 6 }}
@@ -42,7 +43,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: metrics
-              containerPort: 9000
+              containerPort: {{ .Values.metricsPort }}
             - name: http
               containerPort: {{ .Values.port }}
           {{- with .Values.envFrom }}
@@ -97,5 +98,9 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.dnsConfig }}
+      dnsConfig:
         {{- toYaml . | nindent 8 }}
       {{- end }}
