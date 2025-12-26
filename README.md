@@ -12,8 +12,7 @@ This Kubernetes operator provides a way to manage Airflow resources within a Kub
 
 ## Roadmap (TBD)
 
-- Support for AWS managed Airflow
-- making things more async
+- Making reconciliation more async/resilient
 
 ## Compatibility
 
@@ -72,6 +71,40 @@ For Airflow instances that support token-based authentication.
 ```bash
 export AIRFLOW_HOST=http://airflow.example.com
 export AIRFLOW_ACCESS_TOKEN=your_access_token
+```
+
+### AWS (MWAA) Authentication
+
+Use this for Amazon Managed Workflows for Apache Airflow (MWAA). The operator will obtain a short-lived web login token from MWAA and use the returned session cookie to call the Airflow REST API.
+
+Environment variables:
+
+- `USE_AWS_AUTH`: Set to `true` to enable MWAA authentication
+- `AWS_REGION`: AWS region of your MWAA environment (for example, `us-east-1`)
+- `MWAA_ENV_NAME`: Name of the MWAA environment
+- `MWAA_LOGIN_PATH` (optional): Login endpoint path used by MWAA’s web plugin. Defaults to `/pluginsv2/aws_mwaa/login`. Only override if your environment uses a different path.
+- `AIRFLOW_API_BASE_URL` (optional): API base path. MWAA running Airflow 2.x uses `/api/v1`; Airflow 3.x uses `/api/v2`.
+
+Example:
+
+```bash
+export USE_AWS_AUTH=true
+export AWS_REGION=us-east-1
+export MWAA_ENV_NAME=my-mwaa-env
+# Optional: set if running Airflow 3 on MWAA
+export AIRFLOW_API_BASE_URL=/api/v2
+```
+
+IAM requirements:
+
+- Grant the operator’s Kubernetes service account an IAM role (via IRSA) that allows `mwaa:CreateWebLoginToken` for the target MWAA environment.
+
+IRSA service account annotation (EKS):
+
+```yaml
+serviceAccount:
+    annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/airflow-operator-mwaa
 ```
 
 ### Configuration
@@ -195,6 +228,54 @@ Install the operator from an OCI registry.
 ```bash
 # install or upgrade the operator from an OCI chart reference
 helm upgrade --install airflow-operator oci://ghcr.io/drfaust92/charts/airflow-k8s-operator --set operator.airflowHost=airflow.example.com --namespace airflow-operator --create-namespace
+```
+
+### AWS (MWAA) on EKS
+
+Configure the operator to authenticate against MWAA using IRSA and environment variables:
+
+Values snippet:
+
+```yaml
+serviceAccount:
+    annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/airflow-operator-mwaa
+
+env:
+    - name: USE_AWS_AUTH
+        value: "true"
+    - name: AWS_REGION
+        value: "us-east-1"
+    - name: MWAA_ENV_NAME
+        value: "my-mwaa-env"
+    # Uncomment for Airflow 3 on MWAA
+    # - name: AIRFLOW_API_BASE_URL
+    #   value: "/api/v2"
+```
+
+Install with Helm using your values file:
+
+```bash
+helm upgrade --install airflow-operator oci://ghcr.io/drfaust92/charts/airflow-k8s-operator \
+    --namespace airflow-operator --create-namespace \
+    -f values-aws.yaml
+```
+
+Required IAM policy example (attach to the IRSA role):
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "mwaa:CreateWebLoginToken"
+            ],
+            "Resource": "arn:aws:mwaa:us-east-1:123456789012:environment/my-mwaa-env"
+        }
+    ]
+}
 ```
 
 ## Project Architecture

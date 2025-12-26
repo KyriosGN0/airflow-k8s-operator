@@ -6,15 +6,16 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "apache-airflow-client==2.10.0",
-    "kopf>=1.39.0",
-    "google-auth[requests]>=2.43.0",
+    "kopf>=1.39.1",
+    "google-auth[requests]>=2.45.0",
     "kubernetes>=34.1.0",
     "prometheus-client==0.23.1",
+    "boto3>=1.42.16",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.14.9",
+    "ruff>=0.14.10",
 ]
 test = [
     "pytest>=8.0.0",

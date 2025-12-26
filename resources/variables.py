@@ -4,7 +4,7 @@ import kopf
 from airflow_client.client.api.variable_api import VariableApi
 from airflow_client.client.model.variable import Variable
 
-from config.base import OPERATOR_RECONCILE_INTERVAL
+from config.base import OPERATOR_RECONCILE_INTERVAL, OPERATOR_RECONCILE_INTERVAL_DELAY
 from config.client import api_client
 from config.k8s_secret import resolve_value
 from config.metrics import (
@@ -99,7 +99,11 @@ def delete_variable(meta, spec, namespace, logger, body, **kwargs):
 
 
 @kopf.on.timer(
-    "airflow.drfaust92", "v1beta1", "variables", interval=OPERATOR_RECONCILE_INTERVAL
+    "airflow.drfaust92",
+    "v1beta1",
+    "variables",
+    interval=OPERATOR_RECONCILE_INTERVAL,
+    initial_delay=OPERATOR_RECONCILE_INTERVAL_DELAY,
 )
 @kopf.on.update("airflow.drfaust92", "v1beta1", "variables")
 def update_variable(meta, spec, namespace, logger, body, **kwargs):

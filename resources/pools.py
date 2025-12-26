@@ -4,7 +4,7 @@ import kopf
 from airflow_client.client.api.pool_api import PoolApi
 from airflow_client.client.model.pool import Pool
 
-from config.base import OPERATOR_RECONCILE_INTERVAL
+from config.base import OPERATOR_RECONCILE_INTERVAL, OPERATOR_RECONCILE_INTERVAL_DELAY
 from config.client import api_client
 from config.metrics import (
     MANAGED_RESOURCES,
@@ -100,7 +100,11 @@ def delete_pool(meta, spec, namespace, logger, body, **kwargs):
 
 
 @kopf.on.timer(
-    "airflow.drfaust92", "v1beta1", "pools", interval=OPERATOR_RECONCILE_INTERVAL
+    "airflow.drfaust92",
+    "v1beta1",
+    "pools",
+    interval=OPERATOR_RECONCILE_INTERVAL,
+    initial_delay=OPERATOR_RECONCILE_INTERVAL_DELAY,
 )
 @kopf.on.update("airflow.drfaust92", "v1beta1", "pools")
 def update_pool(meta, spec, namespace, logger, body, **kwargs):
