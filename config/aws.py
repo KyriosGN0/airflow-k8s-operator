@@ -39,7 +39,9 @@ def get_token_info(region, env_name, login_path):
         # Extract the web server hostname, login token, and expiration time
         web_server_host_name = response["WebServerHostname"]
         web_token = response["WebToken"]
-        expires_in = response.get("ExpiresIn", 3600)  # Default to 1 hour if not provided
+        expires_in = response.get(
+            "ExpiresIn", 3600
+        )  # Default to 1 hour if not provided
         # Construct the URL needed for authentication
         login_url = f"https://{web_server_host_name}{login_path}"
         login_payload = {"token": web_token}
