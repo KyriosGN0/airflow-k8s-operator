@@ -4,6 +4,13 @@
 
 A Helm chart for Kubernetes Airflow Operator
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| DrFaust92 |  | <https://github.com/DrFaust92> |
+| KyriosGN0 |  | <https://github.com/KyriosGN0> |
+
 ## Values
 
 | Key | Type | Default | Description |
