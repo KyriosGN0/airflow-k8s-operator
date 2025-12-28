@@ -38,4 +38,4 @@ ENTRYPOINT []
 # Use the non-root user to run our application
 USER nonroot
 
-CMD kopf run /app/main.py --liveness=${LIVENESS_PROBE:-http://0.0.0.0:8080/healthz}
+CMD kopf run /app/main.py -v --log-format=json --liveness=${LIVENESS_PROBE:-http://0.0.0.0:8080/healthz}
