@@ -36,4 +36,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 USER nonroot
 
 
-ENTRYPOINT ["kopf", "run", "/app/main.py", "-v"]
+ENTRYPOINT ["kopf", "run", "/app/main.py"]
